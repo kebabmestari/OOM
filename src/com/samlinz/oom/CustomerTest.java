@@ -15,13 +15,13 @@ import java.util.logging.Logger;
  * shuffles it to avoid plagiarism
  * Created by samlinz on 25.11.2016.
  */
-public class Customer {
+public class CustomerTest {
 
     /**
      * Application entry point
      * @param args array of command line arguments
      */
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InterruptedException{
 
         // remove default logger handler
         Logger globalLogger = Logger.getLogger("");
@@ -66,15 +66,31 @@ public class Customer {
                 .addStage(12, "tarjoile", 10, 11)
                 .finish();
 
+        System.out.println("\nThe original ingredients: ");
+        Thread.sleep(5);
+        RecipeUtils.outputRecipeIngredients(chiliConCarne, System.out);
+
+        System.out.println("\nThe original cookings stages:");
+        Thread.sleep(5);
         // output the initial stages in the order they were given
-        chiliConCarne.outputStages(System.out);
+        RecipeUtils.outputRecipeStages(chiliConCarne, System.out);
+
+        System.out.println("\nMixing the ingredients and stages to avoid plagiarism...");
 
         // shuffle ingredients
         RecipeUtils.shuffleIngredients(chiliConCarne);
         // shuffle stages while keeping them in consistent order
         RecipeUtils.shuffleStages(chiliConCarne);
 
-        // output the new recipe
-        chiliConCarne.outputStages(System.out);
+
+        System.out.println("\nThe new ingredient list:");
+        Thread.sleep(5);
+
+        RecipeUtils.outputRecipeIngredients(chiliConCarne, System.out);
+
+        System.out.println("\nThe new cookings stages:");
+        Thread.sleep(5);
+        // output the initial stages in the order they were given
+        RecipeUtils.outputRecipeStages(chiliConCarne, System.out);
     }
 }

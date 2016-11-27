@@ -15,6 +15,17 @@ import java.util.logging.Logger;
 /**
  * Class represents a whole Recipe which consist of a series of
  * manufacturing stages and the list of ingredients
+ *
+ * Class is instatiated through RecipeFactory and which returns the object,
+ * and then the ingredients and stages can be added by adding either objects made with
+ * their own factories or then through 'streaming' shortcut by piping addIngredient()
+ * and addStage() methods next to each other. These methods return reference to this
+ * Recipe so they can be 'piped'
+ *
+ * To avoid plagiarism, call RecipeUtils class' static methods shuffleIngredients() and
+ * shuffleStages(). These mix the recipe information so that the result of the ingredient is
+ * not affected but they look very different
+ *
  * @author Samuel Lindqvist
  */
 public class Recipe {
@@ -156,7 +167,8 @@ public class Recipe {
 
     /**
      * Creates and adds multiple new ingredients
-     *
+     * @.pre descriptions.length > 0
+     * @.post getIngredients().size() > 0
      * @param descriptions list of string descriptions
      * @return THIS for streaming
      */
@@ -167,29 +179,35 @@ public class Recipe {
         return this;
     }
 
+    /**
+     * Add an existing Ingredient object to the recipe
+     * @.pre ingredient != null
+     * @.post getIngredients().size() > 0
+     * @param ingredient
+     */
     public void addIngredient(Ingredient ingredient) {
         this.ingredients.add(ingredient);
         LOG.info("Adding ingredient " + ingredient.getDescription());
     }
 
+    /**
+     * @.pre name has been set with setName
+     * @.post RESULT != null
+     * @return name of the recipe
+     */
     public String getName() {
         return name;
     }
 
+    /**
+     * @.pre name != null
+     * @.post getName() != null
+     * @param name name of the recipe
+     * @return THIS reference
+     */
     public Recipe setName(String name) {
         this.name = name;
         return this;
-    }
-
-    public void shuffleIngredients() {
-        Collections.shuffle(ingredients);
-        LOG.info("Shuffled ingredient list");
-    }
-
-    public void outputStages(PrintStream out) {
-        stages.stream().forEach((s) -> {
-            out.println(s.getDescription());
-        });
     }
 
     private Logger LOG = Logger.getLogger(Recipe.class.getName());

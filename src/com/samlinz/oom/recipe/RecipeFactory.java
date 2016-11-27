@@ -1,4 +1,4 @@
-package com.samlinz.oom;
+package com.samlinz.oom.recipe;
 
 import com.samlinz.oom.ingredient.Ingredient;
 import com.samlinz.oom.stage.Stage;

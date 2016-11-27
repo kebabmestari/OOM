@@ -1,23 +1,36 @@
 package com.samlinz.oom;
 
+import com.samlinz.oom.recipe.Recipe;
+import com.samlinz.oom.recipe.RecipeFactory;
+import com.samlinz.oom.recipe.RecipeUtils;
+
 import java.util.logging.ConsoleHandler;
 import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
+ * A test class
+ * Represents a customer who inputs a recipe and then
+ * shuffles it to avoid plagiarism
  * Created by samlinz on 25.11.2016.
  */
 public class Customer {
+
+    /**
+     * Application entry point
+     * @param args array of command line arguments
+     */
     public static void main(String[] args) {
-        // remove default handler
+
+        // remove default logger handler
         Logger globalLogger = Logger.getLogger("");
         Handler[] handlers = globalLogger.getHandlers();
         for (Handler handler : handlers) {
             globalLogger.removeHandler(handler);
         }
 
-        // add custom handler
+        // add custom logger handler
         ConsoleHandler customHandler = new ConsoleHandler();
         customHandler.setLevel(Level.FINE);
         customHandler.setFormatter(new CustomLogFormatter());
@@ -53,6 +66,15 @@ public class Customer {
                 .addStage(12, "tarjoile", 10, 11)
                 .finish();
 
+        // output the initial stages in the order they were given
+        chiliConCarne.outputStages(System.out);
+
+        // shuffle ingredients
+        RecipeUtils.shuffleIngredients(chiliConCarne);
+        // shuffle stages while keeping them in consistent order
         RecipeUtils.shuffleStages(chiliConCarne);
+
+        // output the new recipe
+        chiliConCarne.outputStages(System.out);
     }
 }

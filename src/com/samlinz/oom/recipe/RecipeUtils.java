@@ -1,4 +1,4 @@
-package com.samlinz.oom;
+package com.samlinz.oom.recipe;
 
 import com.samlinz.oom.stage.Stage;
 
@@ -12,7 +12,7 @@ class StageLine implements Serializable {
 
     private Stage node;
     private List<Stage> stageLine;
-    private boolean isLastLeaf;
+    private boolean isLastLeaf = false;
 
     public StageLine() {
     }
@@ -21,7 +21,7 @@ class StageLine implements Serializable {
         return isLastLeaf;
     }
 
-    public boolean setIsLastLeaf(boolean isLastLeaf) {
+    public void setIsLastLeaf(boolean isLastLeaf) {
         this.isLastLeaf = isLastLeaf;
     }
 
@@ -52,7 +52,7 @@ class StageLine implements Serializable {
     public static List<StageLine> getPrecedingLines(List<StageLine> stagelines, Stage node) {
         List<StageLine> result = new ArrayList<>();
         for (StageLine s : stagelines) {
-            if (s.getNode() == node && !s.isLastLeaf())
+            if (s.getNode() == node && !s.getIsLastLeaf())
                 result.add(s);
         }
         return result;
@@ -126,6 +126,12 @@ public class RecipeUtils {
                     // proceed to outputting them
                     // alternate to shuffle them but keep their own order
                     while(true) {
+                        if(sl.getIsLastLeaf()) {
+                            newList.add(sl.getNode());
+                            linesToBeShuffled.clear();
+                            linesToBeShuffled.add(sl);
+                            break;
+                        }
                         for (int i = 0; i < linesToBeShuffled.size(); i++) {
                             // choose line to output from
                             int random = rng.nextInt(linesToBeShuffled.size());
@@ -153,6 +159,8 @@ public class RecipeUtils {
             }
         }
 
+        recipe.setStages(newList);
+
         LOG.info("Recipe " + recipe.getId() + " stages shuffled");
     }
 
@@ -176,7 +184,7 @@ public class RecipeUtils {
                 if (StageLine.stageLineExits(resultLines, node)) break;
                 StageLine tempLine = getStageLine(node);
                 resultLines.add(tempLine);
-                if (tempLine.isLastLeaf()) break;
+                if (tempLine.getIsLastLeaf()) break;
                 node = tempLine.getNode();
             }
         });
@@ -198,7 +206,6 @@ public class RecipeUtils {
             // bump into a leaf
             if (stage.isLeaf()) {
                 sLine.setNode(stage);
-                sLine.setIsLastLeaf(false);
                 if(line.size() == 1) {
                     sLine.setIsLastLeaf(true);
                 } else {
